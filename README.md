@@ -1,3 +1,6 @@
+# opsMonitor
+端口监控和Http接口地址监控
+
 ## 1、背景介绍
 ```
 需要对线上业务的组件进行监控，直接对每个服务的http接口进行监控，防止进程假死，造成服务伪健康状态
@@ -43,7 +46,7 @@
         
         CREATE DATABASE IF NOT EXISTS opsmonitor  DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
         
-        GRANT ALL PRIVILEGES ON *.* TO 'XXX'@'%' IDENTIFIED BY 'XXXXXX' WITH GRANT OPTION;
+        GRANT ALL PRIVILEGES ON *.* TO 'cxm'@'%' IDENTIFIED BY 'Cxm@2019' WITH GRANT OPTION;
         flush privileges;
         ```   
 2.7 安装redis
@@ -59,9 +62,9 @@
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'opsmonitor', #连接数据库
-        'USER': 'XXX',  #连接用户
-        'PASSWORD': 'XXXXX', #连接密码
-        'HOST': 'X.X.X.X', #连接地址
+        'USER': 'cxm',  #连接用户
+        'PASSWORD': 'Cxm@2019', #连接密码
+        'HOST': '172.19.95.227', #连接地址
         'PORT': '3306', #连接端口
     }
 }
@@ -71,10 +74,10 @@
 #celery
 import djcelery
 djcelery.setup_loader()
-BROKER_URL = 'redis://XXXXXX:6379/11'
+BROKER_URL = 'redis://172.19.95.227:6379/11'
 CELERY_IMPORTS = ('monitor.tasks', )
 CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_RESULT_BACKEND = 'redis://XXXXXX:6379/12'
+CELERY_RESULT_BACKEND = 'redis://172.19.95.227:6379/12'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
@@ -83,7 +86,7 @@ CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 
 #redis queue(作为监控故障队列推送数据)
-REDIS_URL = 'XXXXXX'
+REDIS_URL = '172.19.95.227'
 REDIS_PORT = 6379
 REDIS_DB = 13
 
@@ -147,7 +150,7 @@ startsecs=1
 
 #runserver.conf
 [program:runserver]
-command=/home/ops/py3/bin/python /home/ops/opsMonitor/manage.py runserver XXXXXX:8000
+command=/home/ops/py3/bin/python /home/ops/opsMonitor/manage.py runserver 172.19.95.227:8000
 autostart=true
 autorestart=true
 user=root
