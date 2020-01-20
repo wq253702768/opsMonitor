@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block top_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Dashboard</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Dashboard</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- Info boxes -->
+      <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box">
+            <span class="info-box-icon bg-info elevation-1"><i class="fas fa-bell"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text"><strong>Total 告警数</strong></span>
+              <span class="info-box-number">
+                  {{monitor_alert_total.count}}
+                  <small>条</small>
+                </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-warning elevation-1"><i class="fas fa-exclamation-triangle"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text"><strong>未处理的告警</strong></span>
+              <span class="info-box-number">{{no_process_monitor|length}}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix hidden-md-up"></div>
+
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-success elevation-1"><a href="{% url 'monitor_itmes_url' %}"> <i class="fas fa-clone"></i></a></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text"><strong>Total 监控事件数</strong></span>
+              <span class="info-box-number"><a href="{% url 'monitor_itmes_url' %}"> {{monitor_assets_total.count}}</a></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-12 col-sm-6 col-md-3">
+          <div class="info-box mb-3">
+            <span class="info-box-icon bg-success elevation-1"><i class="fas fa-users"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text"><strong>Total 用户数</strong></span>
+              <span class="info-box-number">{{user_total.count}}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+      <div class="row">
+        <div class="col-md-12">
+          <!-- BAR CHART -->
+          <div class="card card-default">
+            <div class="card-header ">
+              <h3 class="card-title">
+                <strong class="text-center">显示数据: {{year}} 年 {{month}} 月 </strong>
+              </h3>
+
+              <div class="card-tools">
+
+                <button type="button"
+                        class="btn btn-default btn-sm"
+                        data-card-widget="collapse"
+                        data-toggle="tooltip"
+                        title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <p>
+                <small class="text-info">默认显示当月数据，<strong>红色</strong>代表当天有故障，<strong>绿色</strong>代表当天无故障，百分比显示当月的<strong>可用率</strong></small>
+              </p>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="col-md-8">
+                    <div id="bar"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="card card-default">
+            <div class="card-header ">
+              <h3 class="card-title">
+                <strong class="text-center">显示数据: {{year}} 年 {{month}} 月 {{current_day}} 日</strong>
+              </h3>
+              <div class="card-tools">
+
+                <button type="button"
+                        class="btn btn-default btn-sm"
+                        data-card-widget="collapse"
+                        data-toggle="tooltip"
+                        title="Collapse">
+                  <i class="fas fa-minus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <!-- The time line -->
+
+              {% for k,v in day_data_dict.items %}
+              {% if v|length > 0 %}
+              <div class="timeline">
+                <!-- timeline time label -->
+                <div class="time-label">
+                  <span class="bg-red">{{k}}</span>
+                </div>
+                <!-- /.timeline-label -->
+                <!-- timeline item -->
+
+                {% for i in v %}
+                <div>
+                  {% if i.8 %}
+                  <i class="fas fa-bell bg-success"></i>
+                  {% else %}
+                  <i class="fas fa-bell bg-warning"></i>
+                  {% endif %}
+                  <div class="timeline-item">
+                    <span class="time"><i class="fas fa-clock"></i>{{i.11}}</span>
+                    {% if i.8 %}
+                    <h3 class="timeline-header"><strong>【故障恢复】 【{{i.1}}】环境 </strong> </h3>
+
+                    <div class="timeline-body">
+                      {{i.10}},<strong>{{i.7}}</strong> 故障恢复.
+                    </div>
+                    <div class="timeline-footer">
+                      <a href="{% url 'monitor_alerts_detail_url' i.0 %}" class="btn btn-warning btn-sm">查看更多</a>
+                    </div>
+                    {% else %}
+                    <h3 class="timeline-header"><strong class="">【故障告警】 【{{i.1}}】环境</strong></h3>
+
+                    <div class="timeline-body">
+                      {{i.9}},<strong>{{i.7}}</strong> 发生了一次告警.
+                    </div>
+                    <div class="timeline-footer">
+                      <a href="{% url 'monitor_alerts_detail_url' i.0 %}" class="btn btn-warning btn-sm">查看更多</a>
+                    </div>
+                    {% endif %}
+                  </div>
+
+                </div>
+                {% endfor %}
+                <!-- END timeline item -->
+              </div>
+              {% else %}
+              <div>
+                <p class="text-success"> 当天没有告警数据, 请继续保持.</p>
+              </div>
+              {% endif %}
+              {% endfor %}
+            </div>
+            <!-- /.card-body -->
+          </div>
+
+        </div>
+        <!-- /.col -->
+      </div>
+    </div>
+    <!-- /.row -->
+
+
+    <!-- /.row -->
+</div><!--/. container-fluid -->
+</section>
+<!-- /.content -->
+</div>
+{%endblock%}
+{% block script %}
+<!-- ChartJS -->
+<!--<script src="{% static 'plugins/chart.js/Chart.min.js' %}"></script>-->
+<!--<script src="/static/plugins/echarts/echarts.min.js"></script>-->
+{% block link %}
+<style>
+//#bar{    text-align: center;}
+#bar >div{
+    display: flex;
+    //justify-content: center;
+    align-items: center;
+}}
+#bar >div div{}
+#bar >div span{width:100px}
+#bar >div div.barItem{margin:5px;padding:10px 10px;    text-indent: -9999px;}
+#bar >div div.red{background-color:red}
+#bar >div div.normal{background-color:green}
+#bar >div div.default{background-color:wheat}
+
+</style>
+{% endblock %}
+
+
+<script>
+
+$(function(){
+  var data={{day_range_list}};
+  // var data3={"cxm-b-controller": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1]};
+  var data3 = {{js_result|safe}};
+  var barHtml='';
+  for (var key in data3){
+    barHtml+="<span>" +  "环境: " + "<strong>" +key + "</strong>" +"</span><br>"
+    var data2 = data3[key];
+    for (var key in data2 ){
+      barHtml+="<span>"+"Components Name: "+"<strong class='text-info'>"+key+"</strong>"+"</span><div>";
+      var data4 = data2[key]
+
+      for(var i=0,len=data.length;i<len;i++){
+        barHtml+="<div class='barItem "+(data4['result'][i]===1?'red':'normal') +' '+(data4['result'].length<i+1?'default':'') +"'>"+data[i]+"</div>"
+      }
+      barHtml+="<span>"+ "<strong class='text-warning'>" + data4['result_per'] +"%" + "</strong>" + "</span>" +"</div><br>";
+    }
+  }
+  $('#bar').html(barHtml);
+});
+
+</script>
+{% endblock %}

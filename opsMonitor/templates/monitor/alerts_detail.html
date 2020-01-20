@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block top_title %}{{title1}}{% endblock %}
+{% block link %}
+<!-- DataTables -->
+<!-- DataTables -->
+<link rel="stylesheet" href="/static/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+{%endblock%}
+{% block content%}
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>{{title2}}</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{% url 'index_url' %}">Home</a></li>
+            <li class="breadcrumb-item active">DataTables</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">{{title3}}</h3>
+          </div>
+          <!-- /.card-header -->
+          <div class="card-body">
+            {% for alert in monitor_alerts_detail_obj %}
+            <p>组件名:  <strong>{{alert.components_assets.component.name}}</strong></p>
+            <p>主机: <strong>{{alert.components_host}}</strong></p>
+            <p>发送工具模板: <strong>{{alert.send_tool_templates.name}}</strong></p>
+            <p>消息发送状态: <strong>{{alert.get_send_status_display}}</strong></p>
+            <p>redis_key: <strong>{{alert.redis_key}}</strong></p>
+            <p>告警状态: {% if alert.recover_status %}<button class="btn btn-sm btn-success"><strong>已经恢复</strong></button>{%else%}<button class="btn btn-sm btn-warning"><strong>未恢复</strong></button>{%endif%}</p>
+            {% if alert.recover_status %}
+            <p>故障报警时间:  <strong>{{alert.c_time}}</strong></p>
+            <p>故障恢复时间:  <strong>{{alert.u_time}}</strong></p>
+            {% else %}
+            <p>报警时间:  <strong>{{alert.c_time}}</strong></p>
+            {% endif %}
+            <p>故障消息: {{alert.send_context}}</p>
+            {% endfor %}
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </section>
+  <!-- /.content -->
+</div>
+{%endblock%}
+{% block script %}
+<!-- DataTables -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+    });
+  });
+</script>
+{% endblock%}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block top_title %}{{title1}}{% endblock %}
+{% block link %}
+<!-- DataTables -->
+<!-- DataTables -->
+<link rel="stylesheet" href="/static/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+{%endblock%}
+{% block content%}
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>{{title2}}</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">DataTables</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="col-12">
+<div class="main_page">
+	 <iframe scrolling="no" id="main" name="main" frameborder="0"  src="{{url}}"
+        style="min-height:600px;width:100%;height:100%;"></iframe>
+</div>
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </section>
+  <!-- /.content -->
+</div>
+{%endblock%}
+{% block script %}
+<!-- DataTables -->
+<script src="{% static 'plugins/datatables/jquery.dataTables.js' %}"></script>
+<script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.js' %}"></script>
+<script>
+  $(function () {
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+      "paging": true,
+      "lengthChange": false,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+    });
+  });
+</script>
+
+<script>
+  // 计算页面的实际高度，iframe自适应会用到
+  function calcPageHeight(doc) {
+      var cHeight = Math.max(doc.body.clientHeight, doc.documentElement.clientHeight)
+      var sHeight = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight)
+      var height  = Math.max(cHeight, sHeight)
+      return height
+  }
+  //根据ID获取iframe对象
+  var ifr = document.getElementById('main')
+  ifr.onload = function() {
+  	  //解决打开高度太高的页面后再打开高度较小页面滚动条不收缩
+  	  ifr.style.height='0px';
+      var iDoc = ifr.contentDocument || ifr.document
+      var height = calcPageHeight(iDoc)
+      if(height < 850){
+      	height = 850;
+      }
+      ifr.style.height = height + 'px'
+  }
+</script>
+{% endblock%}

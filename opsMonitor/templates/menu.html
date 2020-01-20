@@ -1,0 +1,46 @@
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <!-- Add icons to the links using the .nav-icon class
+             with font-awesome or any other icon font library -->
+        <li class="nav-item has-treeview menu-open">
+            <a href="{% url 'index_url' %}" class="nav-link active">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    Dashboard
+                    <span class="right badge badge-danger">New</span>
+                </p>
+            </a>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-desktop"></i>
+                <p>
+                    监控管理
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item">
+                    <a href="{% url 'monitor_itmes_url' %}" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>监控事件</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'monitor_alerts_url' %}" class="nav-link">
+                        <i class="far fa-circle nav-icon"></i>
+                        <p>告警管理</p>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="{% url 'monitor_flower_url' %}" class="nav-link">
+                <i class="nav-icon fas fa-th"></i>
+                <p>
+                    Task任务监控
+                </p>
+            </a>
+        </li>
+    </ul>
+</nav>
