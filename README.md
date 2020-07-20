@@ -197,3 +197,33 @@ AttributeError: 'str' object has no attribute 'decode'
  query = query.decode(errors='replace') 修改为 query = query.encode('utf-8').decode(errors='replace')
 
 ```
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\qi.wen\AppData\Local\Programs\Python\Python36\lib\wsgiref\handlers.py", line 137, in run
+    self.result = application(self.environ, self.start_response)
+  File "C:\Users\qi.wen\PycharmProjects\UihMonitor\venv\lib\site-packages\django\contrib\staticfiles\handlers.py", line 65, in __call__
+    return self.application(environ, start_response)
+  File "C:\Users\qi.wen\PycharmProjects\UihMonitor\venv\lib\site-packages\django\core\handlers\wsgi.py", line 141, in __call__
+    response = self.get_response(request)
+  File "C:\Users\qi.wen\PycharmProjects\UihMonitor\venv\lib\site-packages\django\core\handlers\base.py", line 75, in get_response
+    response = self._middleware_chain(request)
+  File "C:\Users\qi.wen\PycharmProjects\UihMonitor\venv\lib\site-packages\django\core\handlers\exception.py", line 36, in inner
+    response = response_for_exception(request, exc)
+  File "C:\Users\qi.wen\PycharmProjects\UihMonitor\venv\lib\site-packages\django\core\handlers\exception.py", line 90, in response_for_exception
+    response = handle_uncaught_exception(request, get_resolver(get_urlconf()), sys.exc_info())
+  File "C:\Users\qi.wen\PycharmProjects\UihMonitor\venv\lib\site-packages\django\core\handlers\exception.py", line 125, in handle_uncaught_exception
+    return debug.technical_500_response(request, *exc_info)
+  File "C:\Users\qi.wen\PycharmProjects\UihMonitor\venv\lib\site-packages\django\views\debug.py", line 94, in technical_500_response
+    html = reporter.get_traceback_html()
+  File "C:\Users\qi.wen\PycharmProjects\UihMonitor\venv\lib\site-packages\django\views\debug.py", line 332, in get_traceback_html
+    t = DEBUG_ENGINE.from_string(fh.read())
+UnicodeDecodeError: 'gbk' codec can't decode byte 0xa6 in position 9737: illegal multibyte sequence
+
+解决办法： 
+with Path(CURRENT_DIR, 'templates', 'technical_500.html').open() as fh: 修改为
+with Path(CURRENT_DIR, 'templates', 'technical_500.html').open(encoding='utf-8') as fh:
+```
+
+```
